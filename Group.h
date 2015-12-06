@@ -18,6 +18,7 @@ public:
 
 	void addChild(Node *);
 	void removeChild(Node *);
+	virtual void draw(Matrix4 C);
 	virtual void draw(Matrix4 C, Vector3 v, double d, int wire);
 	virtual void update();
 

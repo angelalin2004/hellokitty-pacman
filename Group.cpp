@@ -20,6 +20,35 @@ void Group::addChild(Node * n) {
 	children.push_back(n);
 }
 
+void Group::draw(Matrix4 C)
+{
+	if (bounding) {
+		glPushMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		Matrix4 C2 = C;
+		float max = std::max(std::max(C2.get(0, 0), C2.get(1, 1)), C2.get(2, 2));
+		max = max * 7;
+		float down = C2.get(3, 1) - 0.5;
+		//C.print("before");
+		C2.set(0, 0, max);
+		C2.set(1, 1, max);
+		C2.set(2, 2, max);
+		C2.set(3, 1, down);
+		//C.print("after");
+		glMultMatrixf(C2.ptr());
+		drawBoundingSphere();
+		glPopMatrix();
+	}
+
+	for (std::list<Node*>::iterator it = children.begin(); it != children.end(); ++it) {
+		// *it is a Node *
+		(*it)->bounding = this->bounding;
+		(*it)->draw(C);
+	}
+
+
+}
+
 void Group::draw(Matrix4 C, Vector3 v, double r, int wire)
 {
 	if (bounding && wire == 1) {

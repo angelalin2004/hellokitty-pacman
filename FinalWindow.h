@@ -6,6 +6,8 @@
 #include "Sphere.h"
 #include "Globals.h"
 #include "OBJObject.h"
+#include "Group.h"
+#include "MatrixTransform.h"
 
 class FinalWindow	  // OpenGL output window related routines
 {
@@ -21,6 +23,7 @@ public:
 
 	
 	static void processNormalKeys(unsigned char, int, int);
+	static void processFunctionKeys(int, int, int);
 	static void processMouseButtons(int, int, int, int);
 	static Vector3 trackBallMapping(Vector3);
 	static void processMouseMotion(int, int);

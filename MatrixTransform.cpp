@@ -10,6 +10,12 @@ MatrixTransform::~MatrixTransform()
 	
 }
 
+void MatrixTransform::draw(Matrix4 C)
+{
+	C = C * M;
+	Group::draw(C);
+}
+
 void MatrixTransform::draw(Matrix4 C, Vector3 v, double r, int wire)
 {
 	C = C * M;

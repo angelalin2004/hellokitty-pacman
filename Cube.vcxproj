@@ -103,6 +103,7 @@
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="MatrixTransform.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="RandHouse.h" />
     <ClInclude Include="Rasterize.h" />
     <ClInclude Include="RobotWindow.h" />
     <ClInclude Include="Shader.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="DrawData.cpp" />
     <ClCompile Include="MatrixTransform.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="RandHouse.cpp" />
     <ClCompile Include="Rasterize.cpp" />
     <ClCompile Include="RobotWindow.cpp" />
     <ClCompile Include="Shader.cpp" />

@@ -14,6 +14,7 @@ public:
 	Geode(void);
 	~Geode(void);
 
+	virtual void draw(Matrix4 C);
 	virtual void draw(Matrix4 C, Vector3 v, double r, int wire);
 	virtual void update();
 	virtual void render() = 0;
