@@ -11,14 +11,17 @@
 
 #include "FinalWindow.h"
 #include <stdlib.h>
+/*
 #include <time.h>
+*/
 
 int FinalWindow::width = 512;   //Set window width in pixels here
 int FinalWindow::height = 512;   //Set window height in pixels here
 Matrix4 changef;
 Camera cameraf;
 Drawable * drawablef;
-std::vector<Drawable*>* drawablesf, *drawables_body, *drawables_roof, *drawables_door;
+std::vector<Drawable*>* drawablesf;
+/* *drawables_body, *drawables_roof, *drawables_door;*/
 int lastf;
 int framef = 0, timef, timebasef = 0;
 int draw_itemf;
@@ -32,11 +35,14 @@ Sphere * pointSpheref;
 Sphere * spotSpheref;
 bool ctrlf;
 float wfovf;
+/*
 OBJObject * body1, *body2, *body3, *body4, *body5;
 OBJObject *roof1, *roof2, *roof3, *roof4, *roof5;
 OBJObject *door1, *door2, *door3, *door4, *door5;
+*/
 OBJObject *kitty;
 RandHouse * house;
+Group * village;
 float angle;
 
 void FinalWindow::initialize(void)
@@ -74,20 +80,31 @@ void FinalWindow::initialize(void)
 	//Color color(0x23ff27ff);
 
 	Globals::sphere.material.diffuseColor = Color(1.0, 0.5, 0.0);
-
+	lastf = 0;
+	draw_itemf = 0;
+	Lmousedownf = Rmousedownf = false;
+	ctrlf = false;
+	wfovf = 60.0;
+	angle = 0.0;
 
 	drawablesf = new std::vector<Drawable*>();
+	kitty = new OBJObject("../Kitty.obj");
+		changef.makeTranslate((-1.0)* kitty->center[0],
+			(-0.5)* kitty->center[1],
+			(-1.0)* kitty->center[2]);
+		kitty->toWorld = changef*kitty->toWorld;
+		changef.makeRotateX(15.0 * 3.14159265 / 180.0);
+		kitty->toWorld = kitty->toWorld * changef;
+		changef.makeRotateZ((-1.0)*6.0 * 3.14159265 / 180.0);
+		kitty->toWorld = kitty->toWorld * changef;
+	/*
 	drawables_body = new std::vector<Drawable*>();
 	drawables_roof = new std::vector<Drawable*>();
 	drawables_door = new std::vector<Drawable*>();
-	lastf = 0;
-	draw_itemf = 0;
+	*/
 
 
-
-
-
-
+	/*
 	body1 = new OBJObject("../Body1T.obj");
 		changef.makeScale(0.35);
 		body1->toWorld = body1->toWorld * changef;
@@ -135,18 +152,10 @@ void FinalWindow::initialize(void)
 	drawables_door->push_back(door3);
 	drawables_door->push_back(door4);
 	drawables_door->push_back(door5);
-
-	kitty = new OBJObject("../Kitty.obj");
-		changef.makeTranslate((-1.0)* kitty->center[0],
-								(-0.5)* kitty->center[1],
-								(-1.0)* kitty->center[2]);
-		kitty->toWorld = changef*kitty->toWorld;
-		changef.makeRotateX(15.0 * 3.14159265 / 180.0);
-		kitty->toWorld = kitty->toWorld * changef;
-		changef.makeRotateZ((-1.0)*6.0 * 3.14159265 / 180.0);
-		kitty->toWorld = kitty->toWorld * changef;
+	*/
 
 
+	/*
 	// scale down objects
 	for (int i = 0; i < drawables_body->size(); i++) {
 		changef.makeScale(0.05);
@@ -174,6 +183,7 @@ void FinalWindow::initialize(void)
 		drawables_door->at(i)->toWorld = drawables_door->at(i)->toWorld * changef;
 		
 	}
+	*/
 	srand(time(NULL));
 	int brand = rand() % 5;
 	std::cout << "brand: " << brand << std::endl;
@@ -181,24 +191,23 @@ void FinalWindow::initialize(void)
 	std::cout << "rrand: " << rrand << std::endl;
 	int drand = rand() % 5;
 	std::cout << "drand: " << drand << std::endl;
+	/*
 	//drawablesf->push_back(drawables_body->at(4));
 	//drawablesf->push_back(drawables_roof->at(rrand));
 	//drawablesf->push_back(drawables_door->at(1));
 	//drawablesf->push_back(kitty);
-
+	*/
+	/*
 	for (int i = 0; i < drawablesf->size(); i++) {
 		changef.makeTranslate(0.0, -5.0, 0.0);
 		drawablesf->at(i)->toWorld = changef*drawablesf->at(i)->toWorld;
 	}
-	
+	*/
+	village = new Group();
+	house = new RandHouse(brand, rrand, drand);
+	village->addChild(house);
 
-	Lmousedownf = Rmousedownf = false;
-	ctrlf = false;
 
-
-
-	wfovf = 60.0;
-	angle = 0.0;
 
 }
 
@@ -279,7 +288,8 @@ void FinalWindow::displayCallback()
 	for (int i = 0; i < drawablesf->size(); i++) {
 		drawablesf->at(i)->draw(Globals::drawData);
 	}
-
+	changef.identity();
+	house->draw(changef);
 
 	//Pop off the changes we made to the matrix stack this frame
 	glPopMatrix();

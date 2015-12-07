@@ -8,6 +8,7 @@
 #include "OBJObject.h"
 #include "Group.h"
 #include "MatrixTransform.h"
+#include "RandHouse.h"
 
 class FinalWindow	  // OpenGL output window related routines
 {
