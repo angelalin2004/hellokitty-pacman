@@ -1,15 +1,79 @@
-﻿Build started 12/6/2015 12:06:17 AM.
-     1>Project "E:\glutfinal\Cube.vcxproj" on node 2 (Build target(s)).
+﻿Build started 12/7/2015 4:31:21 AM.
+     1>Project "C:\Users\Angela\Git\glutfinal\Cube.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt RandHouse.cpp main.cpp
-         RandHouse.cpp
-     1>RandHouse.cpp(72): warning C4018: '<' : signed/unsigned mismatch
-     1>RandHouse.cpp(78): warning C4018: '<' : signed/unsigned mismatch
-     1>RandHouse.cpp(86): warning C4018: '<' : signed/unsigned mismatch
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Cube2.cpp FinalWindow.cpp Flag.cpp FrustumG.cpp Geode.cpp Group.cpp House.cpp main.cpp Camera.cpp Color.cpp Cube.cpp Light.cpp Material.cpp Matrix4.cpp Drawable.cpp DrawData.cpp MatrixTransform.cpp Node.cpp RandHouse.cpp Rasterize.cpp RobotWindow.cpp Shader.cpp Skybox.cpp Sphere.cpp Sphere2.cpp Texture.cpp UpdateData.cpp Vector3.cpp Vector4.cpp Window.cpp Globals.cpp MathTestBench.cpp OBJObject.cpp
+         Cube2.cpp
+         FinalWindow.cpp
+     1>FinalWindow.cpp(288): warning C4018: '<': signed/unsigned mismatch
+         Flag.cpp
+         FrustumG.cpp
+         Geode.cpp
+         Group.cpp
+         House.cpp
          main.cpp
+         Camera.cpp
+         Color.cpp
+     1>Color.cpp(60): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>Color.cpp(64): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+         Cube.cpp
+         Light.cpp
+     1>Light.cpp(61): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+         Material.cpp
+         Matrix4.cpp
+     1>Matrix4.cpp(350): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>Matrix4.cpp(351): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>Matrix4.cpp(352): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>Matrix4.cpp(387): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+     1>Matrix4.cpp(402): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+         Drawable.cpp
+         DrawData.cpp
+         MatrixTransform.cpp
+         Node.cpp
+         RandHouse.cpp
+     1>RandHouse.cpp(72): warning C4018: '<': signed/unsigned mismatch
+     1>RandHouse.cpp(78): warning C4018: '<': signed/unsigned mismatch
+     1>RandHouse.cpp(86): warning C4018: '<': signed/unsigned mismatch
+         Rasterize.cpp
+     1>Rasterize.cpp(142): warning C4018: '<': signed/unsigned mismatch
+     1>Rasterize.cpp(293): warning C4018: '<': signed/unsigned mismatch
+         Generating Code...
+         Compiling...
+         RobotWindow.cpp
+         Shader.cpp
+     1>Shader.cpp(93): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+         Skybox.cpp
+         Sphere.cpp
+         Sphere2.cpp
+         Texture.cpp
+     1>Texture.cpp(107): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+     1>Texture.cpp(125): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(2254): note: see declaration of 'sscanf'
+         UpdateData.cpp
+         Vector3.cpp
+         Vector4.cpp
+         Window.cpp
+     1>Window.cpp(385): warning C4018: '<': signed/unsigned mismatch
+     1>Window.cpp(689): warning C4018: '<': signed/unsigned mismatch
+         Globals.cpp
+         MathTestBench.cpp
+     1>MathTestBench.cpp(107): warning C4305: 'initializing': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(228): warning C4305: 'initializing': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(231): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(242): warning C4305: 'initializing': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(245): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(287): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(324): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+     1>MathTestBench.cpp(532): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(549): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(566): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>MathTestBench.cpp(584): warning C4305: 'argument': truncation from 'double' to 'float'
+         OBJObject.cpp
+     1>OBJObject.cpp(69): warning C4018: '<': signed/unsigned mismatch
          Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\Cube.exe" /INCREMENTAL /NOLOGO /LIBPATH:"E:\glut-3.7.6-bin" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib GLee.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:LIBC.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\Cube.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\Cube.lib" /MACHINE:X86 /SAFESEH Release\Cube2.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\Cube.exe" /INCREMENTAL /NOLOGO /LIBPATH:"E:\glut-3.7.6-bin" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib GLee.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:LIBC.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"Release\Cube.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\Cube.lib" /MACHINE:X86 /SAFESEH Release\Cube2.obj
          Release\FinalWindow.obj
          Release\Flag.obj
          Release\FrustumG.obj
@@ -43,9 +107,10 @@
          Release\MathTestBench.obj
          Release\OBJObject.obj
      1>LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
-         Cube.vcxproj -> E:\glutfinal\Release\Cube.exe
-     1>Done Building Project "E:\glutfinal\Cube.vcxproj" (Build target(s)).
+     1>GLee.lib(GLee.obj) : error LNK2019: unresolved external symbol _sprintf referenced in function ___GLeeGetExtensions
+     1>Release\Cube.exe : fatal error LNK1120: 1 unresolved externals
+     1>Done Building Project "C:\Users\Angela\Git\glutfinal\Cube.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:06.87
+Time Elapsed 00:00:41.37
