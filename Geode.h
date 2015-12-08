@@ -19,6 +19,8 @@ public:
 	virtual void update();
 	virtual void render() = 0;
 
+	int rad;
+	double move;
 };
 
 #endif

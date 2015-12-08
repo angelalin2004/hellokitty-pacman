@@ -27,7 +27,8 @@ public:
 
 	float dist;
 	int dir;
-
+	int rad;
+	double move;
 };
 
 #endif

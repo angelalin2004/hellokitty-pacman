@@ -45,8 +45,13 @@ RandHouse * house, *specialhouse;
 Kitty * kittyGeode;
 Group * village;
 MatrixTransform * villageTransform, *houseTransform, *kittyTransform;
-std::vector<RandHouse*> * houses;
+std::vector<RandHouse*> * innerhouses, *allhouses;
 float angle;
+Vector3 c;
+float minx, maxx, miny, maxy;
+
+std::vector<std::vector<float>>* intervals;
+float magnitude;
 
 void FinalWindow::initialize(void)
 {
@@ -104,13 +109,16 @@ void FinalWindow::initialize(void)
 		kitty->toWorld = kitty->toWorld * changef;
 	changef.identity();
 	kittyTransform = new MatrixTransform(changef);
+		kittyTransform->rad = 1;
 		kittyGeode = new Kitty(kitty);
 		kittyTransform->addChild(kittyGeode);
 	
 	drawables_body = new std::vector<OBJObject*>();
 	drawables_roof = new std::vector<OBJObject*>();
 	drawables_door = new std::vector<OBJObject*>();
-	houses = new std::vector<RandHouse*>();
+	innerhouses = new std::vector<RandHouse*>();
+	allhouses = new std::vector<RandHouse*>();
+	intervals = new std::vector<std::vector<float>>();
 
 	body1 = new OBJObject("../Body1T.obj");
 		changef.makeScale(0.35);
@@ -146,7 +154,7 @@ void FinalWindow::initialize(void)
 
 	
 	door1 = new OBJObject("../Door1T.obj");
-		changef.makeScale(0.9);
+		changef.makeScale(0.9, 0.9, 1.5);
 		door1->toWorld = door1->toWorld * changef;
 	door2 = new OBJObject("../Door2T.obj");
 	door3 = new OBJObject("../Door3T.obj");
@@ -215,7 +223,11 @@ void FinalWindow::initialize(void)
 				int rrand = rand() % 5;
 				int drand = rand() % 5;
 				house = new RandHouse(drawables_body->at(brand), drawables_roof->at(rrand), drawables_door->at(drand));
-				houseTransform = new MatrixTransform(changef.makeTranslate(Vector3((count % 16 - 8) * 10, 0.0, (-1.0)*(count / 16-8) * 10)));
+					c = Vector3((count % 16 - 8) * 16, 0.0, (-1.0)*(count / 16 - 8) * 16);
+					house->center = c;
+				allhouses->push_back(house);
+				intervals->push_back({ c[0] - (float)(7.0 / 2.0), c[0] + (float)(7.0 / 2.0), c[2] - (float)(7.0 / 2.0), c[2] + (float)(7.0 / 2.0), });
+				houseTransform = new MatrixTransform(changef.makeTranslate(c));
 				if (count / 16 == 0)
 					houseTransform->M = houseTransform->M * changef.makeRotateY(180 * 3.14159265 / 180.0);
 				else if (count % 16 == 0) {
@@ -232,14 +244,17 @@ void FinalWindow::initialize(void)
 			int r = rand() % 6;
 			int j = i % 4;
 			int count = ((r % 3 + 3*j) + 12*(r/3)) + i/4*24;
-			std::cout << "r: " << r << " j: " << j << " count: " << count << std::endl;
 			int brand = rand() % 5;
 			int rrand = rand() % 5;
 			int drand = rand() % 5;
 			house = new RandHouse(drawables_body->at(brand), drawables_roof->at(rrand), drawables_door->at(drand));
-			houses->push_back(house);
+				c = Vector3((count % 12 - 6) * 16, 0.0, (-1.0)*(count / 12) * 16);
+				house->center = c;
+			innerhouses->push_back(house);
+			allhouses->push_back(house);
+			intervals->push_back({ c[0] - (float)(7.0 / 2.0), c[0] + (float)(7.0 / 2.0), c[2] - (float)(7.0 / 2.0), c[2] + (float)(7.0 / 2.0), });
 			
-			houseTransform = new MatrixTransform(changef.makeTranslate(Vector3((count % 12 - 6) * 10, 0.0, (-1.0)*(count / 12) * 10)));
+			houseTransform = new MatrixTransform(changef.makeTranslate(c));
 			// apply random rotation
 			//houseTransform->M = houseTransform->M * changef.makeRotateY(rand() % 360 * 3.14159265 / 180.0);
 			houseTransform->addChild(house);
@@ -247,10 +262,17 @@ void FinalWindow::initialize(void)
 		}
 		// make a random house red
 		int special = rand() % 24;
-		specialhouse = houses->at(special);
+		std::cout << "special: " << special << std::endl;
+		specialhouse = innerhouses->at(special);
 		specialhouse->makeRed();
 		village->addChild(villageTransform);
 
+
+		for (int i = 0; i < intervals->size(); i++) {
+			if (i == 60)
+				std::cout << "now middle houses" << std::endl;
+			std::cout << "interval " << i << ": " << intervals->at(i)[0] << " " << intervals->at(i)[1] << " " << intervals->at(i)[2] << " " << intervals->at(i)[3] << std::endl;
+		}
 }
 
 //----------------------------------------------------------------------------
@@ -265,8 +287,7 @@ void FinalWindow::idleCallback()
 	framef++;
 	timef = glutGet(GLUT_ELAPSED_TIME);
 	if (timef - timebasef > 1000) {
-		printf("FPS:%4.2f\n",
-			framef*1000.0 / (timef - timebasef));
+		//printf("FPS:%4.2f\n", framef*1000.0 / (timef - timebasef));
 		timebasef = timef;
 		framef = 0;
 	}
@@ -438,26 +459,84 @@ void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
 //TODO: Function Key callbacks!
 void FinalWindow::processFunctionKeys(int key, int x, int y) {
 	if (key == GLUT_KEY_LEFT) {
-		changef.makeRotateY(2.0 * 3.14159265 / 180.0);
+		changef.makeRotateY(4.0 * 3.14159265 / 180.0);
 		//kitty->toWorld = kitty->toWorld * changef;
 		kittyTransform->M = kittyTransform->M * changef;
+		kittyGeode->angle += 4.0;
 	}
 	else if (key == GLUT_KEY_RIGHT) {
-		changef.makeRotateY((-1.0)*2.0 * 3.14159265 / 180.0);
+		changef.makeRotateY((-1.0)*4.0 * 3.14159265 / 180.0);
 		//kitty->toWorld = kitty->toWorld * changef;
 		kittyTransform->M = kittyTransform->M * changef;
+		kittyGeode->angle -= 4.0;
 	}
 	else if (key == GLUT_KEY_UP) {
 		changef.makeRotateZ(-6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(0.5, 0.0, 0.0);
 		kittyTransform->M = kittyTransform->M * changef;
+		kittyGeode->center = kittyGeode->center.add(Vector3(cos(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, 
+															sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5)));
+		
 	}
 	else if (key == GLUT_KEY_DOWN) {
 		changef.makeRotateZ(6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(-0.5, 0.0, 0.0);
 		kittyTransform->M = kittyTransform->M * changef;
+		kittyGeode->center = kittyGeode->center.add(Vector3(cos(kittyGeode->angle * 3.14159265 / 180.0)*(0.5), 0.0, 
+															sin(kittyGeode->angle * 3.14159265 / 180.0)*(0.5)));
+		
+	}
+	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN) {
+		// go through intervals array
+		minx = kittyGeode->center[0] - (float)(7.0 / 2.0);
+		maxx = kittyGeode->center[0] + (float)(7.0 / 2.0);
+		miny = kittyGeode->center[1] - (float)(7.0 / 2.0);
+		maxy = kittyGeode->center[1] + (float)(7.0 / 2.0);
+		/*
+		for (int i = 0; i < intervals->size(); i++) {
+			//if (minx > intervals->at(i)[1] || maxx < intervals->at(i)[0])
+				//continue;
+			//if (miny > intervals->at(i)[3] || maxy < intervals->at(i)[2])
+				//continue;
+			if (((intervals->at(i)[0] < minx && minx < intervals->at(i)[1]) ||
+				(intervals->at(i)[0] < maxx && maxx < intervals->at(i)[1])) &&
+				((intervals->at(i)[2] < miny && miny < intervals->at(i)[3]) ||
+				(intervals->at(i)[2] < maxy && maxy < intervals->at(i)[3]))) {
+				allhouses->at(i)->colliding = true;
+				std::cout << "COLLIDING at " << i << std::endl;
+			}
+			
+			c = allhouses->at(i)->center;
+			c = c - kittyGeode->center;
+			magnitude = c.magnitude();
+			std::cout << "magnitude: " << magnitude << std::endl;
+			if (magnitude < allhouses->at(i)->rad + 7.0) {
+				allhouses->at(i)->colliding = true;
+				std::cout << "COLLIDING at " << i << std::endl;
+			}
+
+		}
+		*/
+		for (int i = 0; i < innerhouses->size(); i++) {
+			c = innerhouses->at(i)->center;
+			c = c - kittyGeode->center;
+			magnitude = c.magnitude();
+			//innerhouses->at(i)->center.print("center: ");
+			//std::cout << "magnitude: " << magnitude << std::endl;
+			if (magnitude < innerhouses->at(i)->rad + 7.0) {
+				innerhouses->at(i)->colliding = true;
+				std::cout << "COLLIDING at " << i << std::endl;
+			}
+
+		}
+		std::cout << "all collidings: ";
+		for (int i = 0; i < innerhouses->size(); i++) {
+			if (innerhouses->at(i)->colliding == true)
+				std::cout << i << " ";
+		}
+		std::cout << std::endl;
 	}
 }
 
