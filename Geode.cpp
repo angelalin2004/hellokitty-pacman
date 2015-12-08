@@ -1,5 +1,6 @@
-#include "Geode.h"
 #include <algorithm>
+#include "Geode.h"
+
 
 Geode::Geode() : Node()
 {

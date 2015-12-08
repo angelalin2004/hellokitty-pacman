@@ -4,11 +4,11 @@
 
 // "varying" provides an interface between the vertex and fragment shaders.
 // Anything that is "varying" is shared between the two.
-uniform vec3 lightDir;
-varying float intensity;
+varying vec3 normal;
 
 void main()
 {
-	intensity = dot(lightDir,gl_Normal);
+	normal = gl_NormalMatrix * gl_Normal;
 	gl_Position = ftransform();
+
 }

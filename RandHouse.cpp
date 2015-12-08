@@ -14,7 +14,7 @@ RandHouse::RandHouse() : Geode()
 	randomizeRender();
 	makered = false;
 	shader = new Shader("../toon.vert", "../toon.frag", true);
-
+	/*
 	//drawablesf = new std::vector<Drawable*>();
 	drawables_body = new std::vector<Drawable*>();
 	drawables_roof = new std::vector<Drawable*>();
@@ -101,7 +101,7 @@ RandHouse::RandHouse() : Geode()
 		changef.makeTranslate(0.0, -5.0, 0.0);
 		drawables_door->at(i)->toWorld = changef*drawables_door->at(i)->toWorld;
 	}
-
+	*/
 }
 
 RandHouse::RandHouse(OBJObject * b, OBJObject * r, OBJObject * d ) : Geode()
@@ -124,9 +124,6 @@ void RandHouse::update()
 void RandHouse::render()
 {
 	//randomizeRender();
-	//drawables_body->at(brand)->draw(Globals::drawData);
-	//drawables_roof->at(rrand)->draw(Globals::drawData);
-	//drawables_door->at(drand)->draw(Globals::drawData);
 	material.ambientColor = Color(1.0, 0.0, 0.5);
 	//material.emissionColor = Color(0.15, 0.15, 0.15);
 	if (makered == true) {
@@ -138,7 +135,6 @@ void RandHouse::render()
 	door->material = material;
 	//shader->bind();
 	body->draw(Globals::drawData);
-	//shader->unbind();
 	roof->draw(Globals::drawData);
 	door->draw(Globals::drawData);
 	

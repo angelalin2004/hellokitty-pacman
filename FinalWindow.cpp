@@ -1,7 +1,9 @@
+#include "Shader.h"
+#include <mmsystem.h>
+#include <Windows.h>
 #include "RandHouse.h"
 #include <iostream>
 #include <vector>
-
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -13,7 +15,7 @@
 #include "FinalWindow.h"
 #include <stdlib.h>
 #include <time.h>
-
+#pragma comment(lib, "winmm.lib")
 
 int FinalWindow::width = 512;   //Set window width in pixels here
 int FinalWindow::height = 512;   //Set window height in pixels here
@@ -52,9 +54,12 @@ float minx, maxx, miny, maxy;
 
 std::vector<std::vector<float>>* intervals;
 float magnitude;
+bool colliding;
+Shader * shad;
 
 void FinalWindow::initialize(void)
 {
+	PlaySound(TEXT("lol.wav"), NULL, SND_LOOP | SND_ASYNC);
 	Globals::camera.set(Vector3(0.0, 24.14, 24.14), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0));
 
 	//Setup the light
@@ -96,22 +101,31 @@ void FinalWindow::initialize(void)
 	ctrlf = false;
 	wfovf = 60.0;
 	angle = 0.0;
+	colliding = false;
 
+	shad = new Shader("../toon.vert", "../toon.frag", true);
 	drawablesf = new std::vector<Drawable*>();
 	kitty = new OBJObject("../Kitty.obj");
 		changef.makeTranslate((-1.0)* kitty->center[0],
 			(-0.5)* kitty->center[1],
 			(-1.0)* kitty->center[2]);
 		kitty->toWorld = changef*kitty->toWorld;
+		changef.makeTranslate(0.0, 1.0, 0.0);
+		kitty->toWorld = changef*kitty->toWorld;
 		changef.makeRotateX(15.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeRotateZ((-1.0)*6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
+		
 	changef.identity();
 	kittyTransform = new MatrixTransform(changef);
 		kittyTransform->rad = 1;
 		kittyGeode = new Kitty(kitty);
+			kittyGeode->rad = 4;
+			kittyGeode->move = 1.0;
 		kittyTransform->addChild(kittyGeode);
+		changef.makeRotateY(90.0 * 3.14159265 / 180.0);
+		kittyTransform->M = kittyTransform->M * changef;
 	
 	drawables_body = new std::vector<OBJObject*>();
 	drawables_roof = new std::vector<OBJObject*>();
@@ -348,11 +362,13 @@ void FinalWindow::displayCallback()
 	//spotSphere->draw(Globals::drawData);
 
 	//Draw the OBJObjects!
+	//shad->bind();
 	for (int i = 0; i < drawablesf->size(); i++) {
 		drawablesf->at(i)->draw(Globals::drawData);
 	}
 	changef.identity();
 	village->draw(changef);
+	//shad->unbind();
 	kittyTransform->draw(changef);
 
 	//Pop off the changes we made to the matrix stack this frame
@@ -372,6 +388,7 @@ void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
 
 	if (key == 'b') {
 		village->bounding = !(village->bounding);
+		kittyTransform->bounding = !(kittyTransform->bounding);
 	}
 	
 	if (key == 'x') {
@@ -463,20 +480,31 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 		//kitty->toWorld = kitty->toWorld * changef;
 		kittyTransform->M = kittyTransform->M * changef;
 		kittyGeode->angle += 4.0;
+		Globals::camera.e = Globals::camera.e + (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
+		Globals::camera.e = changef * Globals::camera.e;
+		Globals::camera.e = Globals::camera.e - (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
+		Globals::camera.update();
 	}
 	else if (key == GLUT_KEY_RIGHT) {
 		changef.makeRotateY((-1.0)*4.0 * 3.14159265 / 180.0);
 		//kitty->toWorld = kitty->toWorld * changef;
 		kittyTransform->M = kittyTransform->M * changef;
 		kittyGeode->angle -= 4.0;
+		Globals::camera.e = Globals::camera.e + (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
+		Globals::camera.e = changef * Globals::camera.e;
+		Globals::camera.e = Globals::camera.e - (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
+		Globals::camera.update();
 	}
 	else if (key == GLUT_KEY_UP) {
 		changef.makeRotateZ(-6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(0.5, 0.0, 0.0);
 		kittyTransform->M = kittyTransform->M * changef;
-		kittyGeode->center = kittyGeode->center.add(Vector3(cos(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, 
-															sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5)));
+		kittyGeode->center = kittyGeode->center.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, 
+															cos(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5)));
+		Globals::camera.e = Globals::camera.e.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, cos(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5)));
+		Globals::camera.d = Globals::camera.d.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, cos(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5)));
+		Globals::camera.update();
 		
 	}
 	else if (key == GLUT_KEY_DOWN) {
@@ -484,59 +512,34 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(-0.5, 0.0, 0.0);
 		kittyTransform->M = kittyTransform->M * changef;
-		kittyGeode->center = kittyGeode->center.add(Vector3(cos(kittyGeode->angle * 3.14159265 / 180.0)*(0.5), 0.0, 
-															sin(kittyGeode->angle * 3.14159265 / 180.0)*(0.5)));
+		kittyGeode->center = kittyGeode->center.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(0.5), 0.0, 
+															cos(kittyGeode->angle * 3.14159265 / 180.0)*(0.5)));
+		Globals::camera.e = Globals::camera.e.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, cos(kittyGeode->angle * 3.14159265 / 180.0)*(0.5)));
+		Globals::camera.d = Globals::camera.d.add(Vector3(sin(kittyGeode->angle * 3.14159265 / 180.0)*(-0.5), 0.0, cos(kittyGeode->angle * 3.14159265 / 180.0)*(0.5)));
+		Globals::camera.update();
 		
 	}
 	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN) {
+		kittyGeode->center.print("kittyGeode center: ");
 		// go through intervals array
-		minx = kittyGeode->center[0] - (float)(7.0 / 2.0);
-		maxx = kittyGeode->center[0] + (float)(7.0 / 2.0);
-		miny = kittyGeode->center[1] - (float)(7.0 / 2.0);
-		maxy = kittyGeode->center[1] + (float)(7.0 / 2.0);
-		/*
-		for (int i = 0; i < intervals->size(); i++) {
-			//if (minx > intervals->at(i)[1] || maxx < intervals->at(i)[0])
-				//continue;
-			//if (miny > intervals->at(i)[3] || maxy < intervals->at(i)[2])
-				//continue;
-			if (((intervals->at(i)[0] < minx && minx < intervals->at(i)[1]) ||
-				(intervals->at(i)[0] < maxx && maxx < intervals->at(i)[1])) &&
-				((intervals->at(i)[2] < miny && miny < intervals->at(i)[3]) ||
-				(intervals->at(i)[2] < maxy && maxy < intervals->at(i)[3]))) {
-				allhouses->at(i)->colliding = true;
-				std::cout << "COLLIDING at " << i << std::endl;
-			}
-			
-			c = allhouses->at(i)->center;
-			c = c - kittyGeode->center;
-			magnitude = c.magnitude();
-			std::cout << "magnitude: " << magnitude << std::endl;
-			if (magnitude < allhouses->at(i)->rad + 7.0) {
-				allhouses->at(i)->colliding = true;
-				std::cout << "COLLIDING at " << i << std::endl;
-			}
-
-		}
-		*/
+		minx = kittyGeode->center[0] - (float)(kittyGeode->rad / 2.0);
+		maxx = kittyGeode->center[0] + (float)(kittyGeode->rad / 2.0);
+		miny = kittyGeode->center[2] - (float)(kittyGeode->rad / 2.0);
+		maxy = kittyGeode->center[2] + (float)(kittyGeode->rad / 2.0);
+		colliding = false;
 		for (int i = 0; i < innerhouses->size(); i++) {
 			c = innerhouses->at(i)->center;
 			c = c - kittyGeode->center;
 			magnitude = c.magnitude();
-			//innerhouses->at(i)->center.print("center: ");
-			//std::cout << "magnitude: " << magnitude << std::endl;
-			if (magnitude < innerhouses->at(i)->rad + 7.0) {
+			if (magnitude < innerhouses->at(i)->rad + kittyGeode->rad) {
 				innerhouses->at(i)->colliding = true;
-				std::cout << "COLLIDING at " << i << std::endl;
+				colliding = true;
 			}
-
+			else {
+				innerhouses->at(i)->colliding = false;
+			}
 		}
-		std::cout << "all collidings: ";
-		for (int i = 0; i < innerhouses->size(); i++) {
-			if (innerhouses->at(i)->colliding == true)
-				std::cout << i << " ";
-		}
-		std::cout << std::endl;
+		kittyGeode->colliding = colliding;
 	}
 }
 
