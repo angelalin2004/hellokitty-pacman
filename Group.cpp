@@ -28,7 +28,7 @@ void Group::draw(Matrix4 C)
 		Matrix4 C2 = C;
 		float max = std::max(std::max(C2.get(0, 0), C2.get(1, 1)), C2.get(2, 2));
 		max = max * 7;
-		float down = C2.get(3, 1) - 0.5;
+		float down = C2.get(3, 1) ;
 		//C.print("before");
 		C2.set(0, 0, max);
 		C2.set(1, 1, max);

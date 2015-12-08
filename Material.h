@@ -26,6 +26,7 @@ public:
     ~Material(void);
     
     virtual void apply(void);
+	virtual void reset(void);
     
 };
 

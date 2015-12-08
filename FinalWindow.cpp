@@ -1,3 +1,4 @@
+#include "RandHouse.h"
 #include <iostream>
 #include <vector>
 
@@ -11,9 +12,8 @@
 
 #include "FinalWindow.h"
 #include <stdlib.h>
-/*
 #include <time.h>
-*/
+
 
 int FinalWindow::width = 512;   //Set window width in pixels here
 int FinalWindow::height = 512;   //Set window height in pixels here
@@ -21,7 +21,7 @@ Matrix4 changef;
 Camera cameraf;
 Drawable * drawablef;
 std::vector<Drawable*>* drawablesf;
-/* *drawables_body, *drawables_roof, *drawables_door;*/
+std::vector<OBJObject*> *drawables_body, *drawables_roof, *drawables_door;
 int lastf;
 int framef = 0, timef, timebasef = 0;
 int draw_itemf;
@@ -35,18 +35,23 @@ Sphere * pointSpheref;
 Sphere * spotSpheref;
 bool ctrlf;
 float wfovf;
-/*
+
 OBJObject * body1, *body2, *body3, *body4, *body5;
 OBJObject *roof1, *roof2, *roof3, *roof4, *roof5;
 OBJObject *door1, *door2, *door3, *door4, *door5;
-*/
+
 OBJObject *kitty;
-RandHouse * house;
+RandHouse * house, *specialhouse;
+Kitty * kittyGeode;
 Group * village;
+MatrixTransform * villageTransform, *houseTransform, *kittyTransform;
+std::vector<RandHouse*> * houses;
 float angle;
 
 void FinalWindow::initialize(void)
 {
+	Globals::camera.set(Vector3(0.0, 24.14, 24.14), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0));
+
 	//Setup the light
 	Vector4 lightPos(10.0, 10.0, 0.0, 1.0);
 	Globals::light.position = lightPos;
@@ -97,14 +102,16 @@ void FinalWindow::initialize(void)
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeRotateZ((-1.0)*6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
-	/*
-	drawables_body = new std::vector<Drawable*>();
-	drawables_roof = new std::vector<Drawable*>();
-	drawables_door = new std::vector<Drawable*>();
-	*/
+	changef.identity();
+	kittyTransform = new MatrixTransform(changef);
+		kittyGeode = new Kitty(kitty);
+		kittyTransform->addChild(kittyGeode);
+	
+	drawables_body = new std::vector<OBJObject*>();
+	drawables_roof = new std::vector<OBJObject*>();
+	drawables_door = new std::vector<OBJObject*>();
+	houses = new std::vector<RandHouse*>();
 
-
-	/*
 	body1 = new OBJObject("../Body1T.obj");
 		changef.makeScale(0.35);
 		body1->toWorld = body1->toWorld * changef;
@@ -139,23 +146,24 @@ void FinalWindow::initialize(void)
 
 	
 	door1 = new OBJObject("../Door1T.obj");
+		changef.makeScale(0.9);
+		door1->toWorld = door1->toWorld * changef;
 	door2 = new OBJObject("../Door2T.obj");
 	door3 = new OBJObject("../Door3T.obj");
+		changef.makeScale(0.9);
+		door3->toWorld = door3->toWorld * changef;
+		changef.makeTranslate(0.0, 3.0, 0.0);
+		door3->toWorld = door3->toWorld * changef;
 	door4 = new OBJObject("../Door4T.obj");
 	door5 = new OBJObject("../Door5T.obj");
 		changef.makeScale(0.85);
-		door5->toWorld = door5->toWorld * changef;
-		changef.makeTranslate(0.0, 1.0, 0.0);
 		door5->toWorld = door5->toWorld * changef;
 	drawables_door->push_back(door1);
 	drawables_door->push_back(door2);
 	drawables_door->push_back(door3);
 	drawables_door->push_back(door4);
 	drawables_door->push_back(door5);
-	*/
-
-
-	/*
+	
 	// scale down objects
 	for (int i = 0; i < drawables_body->size(); i++) {
 		changef.makeScale(0.05);
@@ -183,31 +191,65 @@ void FinalWindow::initialize(void)
 		drawables_door->at(i)->toWorld = drawables_door->at(i)->toWorld * changef;
 		
 	}
-	*/
-	srand(time(NULL));
-	int brand = rand() % 5;
-	std::cout << "brand: " << brand << std::endl;
-	int rrand = rand() % 5;
-	std::cout << "rrand: " << rrand << std::endl;
-	int drand = rand() % 5;
-	std::cout << "drand: " << drand << std::endl;
-	/*
+
 	//drawablesf->push_back(drawables_body->at(4));
-	//drawablesf->push_back(drawables_roof->at(rrand));
+	//drawablesf->push_back(drawables_roof->at(3));
 	//drawablesf->push_back(drawables_door->at(1));
 	//drawablesf->push_back(kitty);
-	*/
 	/*
 	for (int i = 0; i < drawablesf->size(); i++) {
 		changef.makeTranslate(0.0, -5.0, 0.0);
 		drawablesf->at(i)->toWorld = changef*drawablesf->at(i)->toWorld;
 	}
 	*/
+	
+	
+	
+	changef.identity();
 	village = new Group();
-	house = new RandHouse(brand, rrand, drand);
-	village->addChild(house);
-
-
+		villageTransform = new MatrixTransform(changef);
+		// add houses on borders
+		for (int count = 0; count < 256; count++) {
+			if (count / 16 == 0 || count / 16 == 15 || count % 16 == 0 || count % 16 == 15) {
+				int brand = rand() % 5;
+				int rrand = rand() % 5;
+				int drand = rand() % 5;
+				house = new RandHouse(drawables_body->at(brand), drawables_roof->at(rrand), drawables_door->at(drand));
+				houseTransform = new MatrixTransform(changef.makeTranslate(Vector3((count % 16 - 8) * 10, 0.0, (-1.0)*(count / 16-8) * 10)));
+				if (count / 16 == 0)
+					houseTransform->M = houseTransform->M * changef.makeRotateY(180 * 3.14159265 / 180.0);
+				else if (count % 16 == 0) {
+					houseTransform->M = houseTransform->M * changef.makeRotateY(90 * 3.14159265 / 180.0);
+				}
+				else if (count % 16 == 15)
+					houseTransform->M = houseTransform->M * changef.makeRotateY((-1.0)*90 * 3.14159265 / 180.0);
+				houseTransform->addChild(house);
+				villageTransform->addChild(houseTransform);
+			}
+		}
+		// random houses in middle
+		for (int i = 0; i < 24; i++) {
+			int r = rand() % 6;
+			int j = i % 4;
+			int count = ((r % 3 + 3*j) + 12*(r/3)) + i/4*24;
+			std::cout << "r: " << r << " j: " << j << " count: " << count << std::endl;
+			int brand = rand() % 5;
+			int rrand = rand() % 5;
+			int drand = rand() % 5;
+			house = new RandHouse(drawables_body->at(brand), drawables_roof->at(rrand), drawables_door->at(drand));
+			houses->push_back(house);
+			
+			houseTransform = new MatrixTransform(changef.makeTranslate(Vector3((count % 12 - 6) * 10, 0.0, (-1.0)*(count / 12) * 10)));
+			// apply random rotation
+			//houseTransform->M = houseTransform->M * changef.makeRotateY(rand() % 360 * 3.14159265 / 180.0);
+			houseTransform->addChild(house);
+			villageTransform->addChild(houseTransform);
+		}
+		// make a random house red
+		int special = rand() % 24;
+		specialhouse = houses->at(special);
+		specialhouse->makeRed();
+		village->addChild(villageTransform);
 
 }
 
@@ -289,7 +331,8 @@ void FinalWindow::displayCallback()
 		drawablesf->at(i)->draw(Globals::drawData);
 	}
 	changef.identity();
-	house->draw(changef);
+	village->draw(changef);
+	kittyTransform->draw(changef);
 
 	//Pop off the changes we made to the matrix stack this frame
 	glPopMatrix();
@@ -305,12 +348,11 @@ void FinalWindow::displayCallback()
 
 //TODO: Keyboard callbacks!
 void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
-	/*
+
 	if (key == 'b') {
-		platoon->bounding = !(platoon->bounding);
-		platoon2->bounding = !(platoon2->bounding);
+		village->bounding = !(village->bounding);
 	}
-	*/
+	
 	if (key == 'x') {
 		changef.makeTranslate(-1.0, 0.0, 0.0);
 
@@ -383,25 +425,39 @@ void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
 		drawablesf->at(lastf)->toWorld = drawablesf->at(lastf)->toWorld * changef;
 		drawablesf->at(lastf)->right = drawablesf->at(lastf)->right * changef;
 	}
+	else if (key == 't') {
+		changef.makeRotateY(90 * 3.14159265 / 180.0);
+		drawablesf->at(lastf)->toWorld = drawablesf->at(lastf)->toWorld * changef;
+	}
+	else if (key == 'T') {
+		changef.makeRotateY((-1.0) * 90 * 3.14159265 / 180.0);
+		drawablesf->at(lastf)->toWorld = drawablesf->at(lastf)->toWorld * changef;
+	}
 }
 
 //TODO: Function Key callbacks!
 void FinalWindow::processFunctionKeys(int key, int x, int y) {
 	if (key == GLUT_KEY_LEFT) {
 		changef.makeRotateY(2.0 * 3.14159265 / 180.0);
-		kitty->toWorld = kitty->toWorld * changef;
+		//kitty->toWorld = kitty->toWorld * changef;
+		kittyTransform->M = kittyTransform->M * changef;
 	}
 	else if (key == GLUT_KEY_RIGHT) {
 		changef.makeRotateY((-1.0)*2.0 * 3.14159265 / 180.0);
-		kitty->toWorld = kitty->toWorld * changef;
+		//kitty->toWorld = kitty->toWorld * changef;
+		kittyTransform->M = kittyTransform->M * changef;
 	}
 	else if (key == GLUT_KEY_UP) {
-		changef.makeRotateZ((-1.0)*2.0 * 3.14159265 / 180.0);
+		changef.makeRotateZ(-6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
+		changef.makeTranslate(0.5, 0.0, 0.0);
+		kittyTransform->M = kittyTransform->M * changef;
 	}
 	else if (key == GLUT_KEY_DOWN) {
-		changef.makeRotateZ(2.0 * 3.14159265 / 180.0);
+		changef.makeRotateZ(6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
+		changef.makeTranslate(-0.5, 0.0, 0.0);
+		kittyTransform->M = kittyTransform->M * changef;
 	}
 }
 

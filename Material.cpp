@@ -55,5 +55,13 @@ void Material::apply(void)
     //glColor3fv(color.ptr());
 }
 
+void Material::reset(void)
+{
+	ambientColor = Color::ambientMaterialDefault();
+	diffuseColor = Color::diffuseMaterialDefault();
+	specularColor = Color::specularMaterialDefault();
+	emissionColor = Color::emissionMaterialDefault();
+	shininess = 10.0;
+}
 
 

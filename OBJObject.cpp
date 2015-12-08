@@ -194,9 +194,11 @@ void OBJObject::parse(std::string& filename)
     }
     
     std::cout << "Done parsing." << std::endl;
+	/*
 	std::cout << vertices->size() << std::endl;
 	std::cout << normals->size() << std::endl;
 	std::cout << faces->size() << std::endl;
+	*/
 }
 
 //Split functions from the interwebs
@@ -223,10 +225,11 @@ void OBJObject::normalize()
 {
 	if (vertices->empty())
 		return;
+	/*
 	std::cout << minx << " " << maxx << std::endl;
 	std::cout << miny << " " << maxy << std::endl;
 	std::cout << minz << " " << maxz << std::endl;
-
+	*/
 	midx = (maxx + minx) / 2;
 	midy = (maxy + miny) / 2;
 	midz = (maxz + minz) / 2;

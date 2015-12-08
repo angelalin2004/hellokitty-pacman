@@ -9,17 +9,18 @@
 
 #include "math.h"
 
-RandHouse::RandHouse(int b, int r, int d) : Geode()
+RandHouse::RandHouse() : Geode()
 {
-	brand = b; 
-	rrand = r;
-	drand = d;
+	randomizeRender();
+	makered = false;
+	shader = new Shader("../toon.vert", "../toon.frag", true);
 
-	drawablesf = new std::vector<Drawable*>();
+	//drawablesf = new std::vector<Drawable*>();
 	drawables_body = new std::vector<Drawable*>();
 	drawables_roof = new std::vector<Drawable*>();
 	drawables_door = new std::vector<Drawable*>();
 
+	
 	body1 = new OBJObject("../Body1T.obj");
 	changef.makeScale(0.35);
 	body1->toWorld = body1->toWorld * changef;
@@ -101,9 +102,13 @@ RandHouse::RandHouse(int b, int r, int d) : Geode()
 		drawables_door->at(i)->toWorld = changef*drawables_door->at(i)->toWorld;
 	}
 
+}
 
-
-
+RandHouse::RandHouse(OBJObject * b, OBJObject * r, OBJObject * d ) : Geode()
+{
+	body = b;
+	roof = r;
+	door = d;
 }
 
 RandHouse::~RandHouse()
@@ -119,9 +124,28 @@ void RandHouse::update()
 void RandHouse::render()
 {
 	//randomizeRender();
-	drawables_body->at(brand)->draw(Globals::drawData);
-	drawables_roof->at(rrand)->draw(Globals::drawData);
-	drawables_door->at(drand)->draw(Globals::drawData);
+	//drawables_body->at(brand)->draw(Globals::drawData);
+	//drawables_roof->at(rrand)->draw(Globals::drawData);
+	//drawables_door->at(drand)->draw(Globals::drawData);
+	material.ambientColor = Color(1.0, 0.0, 0.5);
+	//material.emissionColor = Color(0.15, 0.15, 0.15);
+	if (makered == true) {
+		material.ambientColor = Color(1.0, 0.0, 0.0);
+		material.diffuseColor = Color(1.0, 0.0, 0.0);
+	}
+	body->material = material;
+	roof->material = material;
+	door->material = material;
+	//shader->bind();
+	body->draw(Globals::drawData);
+	//shader->unbind();
+	roof->draw(Globals::drawData);
+	door->draw(Globals::drawData);
+	
+	body->material.reset();
+	roof->material.reset();
+	door->material.reset();
+
 }
 
 void RandHouse::randomizeRender()
@@ -132,3 +156,7 @@ void RandHouse::randomizeRender()
 	drand = rand() % 5;
 }
 
+void RandHouse::makeRed()
+{
+	makered = true;
+}
