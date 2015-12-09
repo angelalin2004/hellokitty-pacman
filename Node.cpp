@@ -22,6 +22,12 @@ Node::~Node()
 void Node::drawBoundingSphere() {
 	float default[4] = { 0.0, 1.0, 0.0, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, (GLfloat *)default);
+	
+	default[0] = 0.8;
+	default[1] = 0.8;
+	default[2] = 0.8;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, (GLfloat *)default);
+	
 	glutWireSphere(radius, 50, 50);
 	default[0] = 0.2;
 	default[1] = 0.2;
@@ -40,7 +46,8 @@ void Node::drawBoundingSphere(int i) {
 		default[2] = 1.0;
 	}
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, (GLfloat *)default);
-	glutWireSphere(radius, 50, 50);
+	glutWireCube(radius*1.5);
+	//glutWireSphere(radius, 50, 50);
 	default[0] = 0.2;
 	default[1] = 0.2;
 	default[2] = 0.2;

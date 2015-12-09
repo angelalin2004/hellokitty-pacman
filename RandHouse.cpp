@@ -107,6 +107,9 @@ RandHouse::RandHouse() : Geode()
 RandHouse::RandHouse(OBJObject * b, OBJObject * r, OBJObject * d ) : Geode()
 {
 	body = b;
+	if (r == NULL) {
+		std::cerr << "got here" << std::endl;
+	}
 	roof = r;
 	door = d;
 }
@@ -125,23 +128,26 @@ void RandHouse::render()
 {
 	//randomizeRender();
 	material.ambientColor = Color(1.0, 0.0, 0.5);
+	material.diffuseColor = Color::diffuseMaterialDefault();
 	//material.emissionColor = Color(0.15, 0.15, 0.15);
 	if (makered == true) {
 		material.ambientColor = Color(1.0, 0.0, 0.0);
 		material.diffuseColor = Color(1.0, 0.0, 0.0);
 	}
-	body->material = material;
-	roof->material = material;
-	door->material = material;
 	//shader->bind();
+	body->material = material;
 	body->draw(Globals::drawData);
-	roof->draw(Globals::drawData);
-	door->draw(Globals::drawData);
-	
-	body->material.reset();
-	roof->material.reset();
-	door->material.reset();
-
+	body->material.reset();	
+	if (roof != NULL) {
+		roof->material = material;
+		roof->draw(Globals::drawData);
+		roof->material.reset();
+	}
+	if (door != NULL) {
+		door->material = material;
+		door->draw(Globals::drawData);
+		door->material.reset();
+	}
 }
 
 void RandHouse::randomizeRender()
@@ -155,4 +161,9 @@ void RandHouse::randomizeRender()
 void RandHouse::makeRed()
 {
 	makered = true;
+}
+
+void RandHouse::makeNotRed()
+{
+	makered = false;
 }

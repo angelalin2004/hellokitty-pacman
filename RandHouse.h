@@ -36,6 +36,7 @@ public:
 	virtual void render();
 	virtual void randomizeRender();
 	virtual void makeRed();
+	virtual void makeNotRed();
 
 };
 

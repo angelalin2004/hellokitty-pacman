@@ -1,1 +1,55 @@
 problem with binding toon shader
+
+brand = rand() % 5;
+	// get roof
+	if (brand == 0 || brand == 3) {
+		rrand = rand() % 2;
+		if (rrand == 0)
+			rrand = 1;
+		else
+			rrand = 4;
+	}
+	else if (brand == 1 || brand == 2) {
+		rrand = rand() % 3;
+		if (rrand == 0)
+			rrand = 0;
+		else if (rrand == 1)
+			rrand = 2;
+		else
+			rrand = 3;
+	}
+	else {
+		rrand = rand() % 2;
+		if (rrand == 0)
+			rrand = 1;
+		else
+			rrand = 5; // none
+	}
+	// get door
+	if (brand == 0) {
+		drand = rand() % 2;
+		if (drand == 1)
+			drand = 5; // none
+	}
+	else if (brand == 1 || brand == 2) {
+		drand = rand() % 4;
+		drand = drand + 1;
+	}
+	else if (brand == 3) {
+		drand = 5; // none
+	}
+	else {
+		drand = rand() % 2;
+		if (drand == 0)
+			drand = 3;
+		else
+			drand = 5; // none
+	}
+	if (rrand != 5)
+		roof_ptr = drawables_roof->at(rrand);
+	else
+		roof_ptr = NULL;
+	if (drand != 5)
+		door_ptr = drawables_door->at(drand);
+	else
+		door_ptr = NULL;

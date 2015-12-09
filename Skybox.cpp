@@ -11,13 +11,13 @@
 
 Skybox::Skybox() : Drawable()
 {
-	halfSize = 100.0;
-	back = new Texture ("../Skybox_Water222_back.ppm");
-	base = new Texture("../Skybox_Water222_base.ppm");
-	front = new Texture("../Skybox_Water222_front.ppm");
-	left = new Texture("../Skybox_Water222_left.ppm");
-	right = new Texture("../Skybox_Water222_right.ppm");
-	top = new Texture("../Skybox_Water222_top.ppm");
+	halfSize = 200.0;
+	back = new Texture ("../darkcity_bk.ppm");
+	base = new Texture("../darkcity_dn.ppm");
+	front = new Texture("../darkcity_ft.ppm");
+	left = new Texture("../darkcity_lf.ppm");
+	right = new Texture("../darkcity_rt.ppm");
+	top = new Texture("../darkcity_up.ppm");
 }
 
 Skybox::~Skybox()
@@ -29,8 +29,8 @@ Skybox::~Skybox()
 void Skybox::draw(DrawData& data)
 {
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	glDisable(GL_LIGHTING);
 	//Apply the material properties
 	//From here forward anything drawn will be drawn with this material
@@ -105,6 +105,7 @@ void Skybox::draw(DrawData& data)
 	top->unbind();
 
 	// Draw bottom side:
+	/*
 	base->bind();
 	glBegin(GL_QUADS);
 	glTexCoord2d(0.0, 0.0), glVertex3f(-halfSize, -halfSize, halfSize);
@@ -113,7 +114,7 @@ void Skybox::draw(DrawData& data)
 	glTexCoord2d(0.0, 1.0), glVertex3f(-halfSize, -halfSize, -halfSize);
 	glEnd();
 	base->unbind();
-
+	*/
 	glEnd();
 
 	//The above glBegin, glEnd, glNormal and glVertex calls can be replaced with a glut convenience function

@@ -28,7 +28,7 @@ public:
 	static void processMouseButtons(int, int, int, int);
 	static Vector3 trackBallMapping(Vector3);
 	static void processMouseMotion(int, int);
-
+	static void getRands();
 
 	virtual ~FinalWindow(void);
 };
