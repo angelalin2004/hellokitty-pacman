@@ -94,7 +94,7 @@ void OBJObject::parse(std::string& filename)
     
     int lineNum = 0;
     
-    std::cout << "Starting parse..." << std::endl;
+    //std::cout << "Starting parse..." << std::endl;
 	bool printed = false;
     
     //While all your lines are belong to us
@@ -193,7 +193,7 @@ void OBJObject::parse(std::string& filename)
 		else {}
     }
     
-    std::cout << "Done parsing." << std::endl;
+    //std::cout << "Done parsing." << std::endl;
 	/*
 	std::cout << vertices->size() << std::endl;
 	std::cout << normals->size() << std::endl;
@@ -234,7 +234,7 @@ void OBJObject::normalize()
 	midy = (maxy + miny) / 2;
 	midz = (maxz + minz) / 2;
 	center = Vector3((maxx + minx) / 2, (maxy + miny) / 2, (maxz + minz) / 2);
-	center.print("");
+	//center.print("");
 	/*
 	for (int i = 0; i < (sizeof vertices) / (sizeof vertices->at(0)); i++) {
 		Vector3 temp = *(vertices->at(i));

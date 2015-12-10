@@ -9,11 +9,13 @@
 
 #include "math.h"
 
+
+//Shader * shader = new Shader("../toon.vert", "../toon.frag", true);
 RandHouse::RandHouse() : Geode()
 {
 	randomizeRender();
 	makered = false;
-	shader = new Shader("../toon.vert", "../toon.frag", true);
+
 	/*
 	//drawablesf = new std::vector<Drawable*>();
 	drawables_body = new std::vector<Drawable*>();
@@ -107,9 +109,6 @@ RandHouse::RandHouse() : Geode()
 RandHouse::RandHouse(OBJObject * b, OBJObject * r, OBJObject * d ) : Geode()
 {
 	body = b;
-	if (r == NULL) {
-		std::cerr << "got here" << std::endl;
-	}
 	roof = r;
 	door = d;
 }
@@ -148,6 +147,7 @@ void RandHouse::render()
 		door->draw(Globals::drawData);
 		door->material.reset();
 	}
+	//shader->unbind();
 }
 
 void RandHouse::randomizeRender()

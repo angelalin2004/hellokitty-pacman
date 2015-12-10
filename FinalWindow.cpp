@@ -60,11 +60,12 @@ Shader * shad;
 int special;
 int points;
 Skybox * skyb;
-int brand, rrand, drand;
+int brand, rrand, drand; 
+bool toon;
 
 void FinalWindow::initialize(void)
 {
-	PlaySound(TEXT("lol.wav"), NULL, SND_LOOP | SND_ASYNC);
+	PlaySound(TEXT("../Moon_Stage.wav"), NULL, SND_LOOP | SND_ASYNC);
 	Globals::camera.set(Vector3(0.0, 15.30, 24.14), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0));
 
 	//Setup the light
@@ -111,6 +112,7 @@ void FinalWindow::initialize(void)
 	brand = 0;
 	rrand = 0;
 	drand = 0;
+	toon = false;
 
 	shad = new Shader("../toon.vert", "../toon.frag", true);
 	drawablesf = new std::vector<Drawable*>();
@@ -119,8 +121,9 @@ void FinalWindow::initialize(void)
 			(-0.5)* kitty->center[1],
 			(-1.0)* kitty->center[2]);
 		kitty->toWorld = changef*kitty->toWorld;
-		changef.makeTranslate(0.0, 1.0, 0.0);
+		changef.makeTranslate(0.0, 2.0, 0.0);
 		kitty->toWorld = changef*kitty->toWorld;
+		
 		changef.makeRotateX(15.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeRotateZ((-1.0)*6.0 * 3.14159265 / 180.0);
@@ -131,7 +134,7 @@ void FinalWindow::initialize(void)
 		kittyTransform->rad = 1;
 		kittyGeode = new Kitty(kitty);
 			kittyGeode->rad = 4;
-			kittyGeode->move = 1.0;
+			kittyGeode->move = 2.0;
 		kittyTransform->addChild(kittyGeode);
 		changef.makeRotateY(90.0 * 3.14159265 / 180.0);
 		kittyTransform->M = kittyTransform->M * changef;
@@ -248,7 +251,6 @@ void FinalWindow::initialize(void)
 		for (int count = 0; count < 256; count++) {
 			if (count / 16 == 0 || count / 16 == 15 || count % 16 == 0 || count % 16 == 15) {
 				getRands();
-				std::cerr << "before" << std::endl;
 				house = new RandHouse(drawables_body->at(brand), roof_ptr, door_ptr);
 					c = Vector3((count % 16 - 8) * 16, 0.0, (-1.0)*(count / 16 - 8) * 16);
 					house->center = c;
@@ -291,7 +293,7 @@ void FinalWindow::initialize(void)
 		}
 		// make a random house red
 		special = rand() % 36;
-		std::cout << "special: " << special << std::endl;
+		//std::cout << "special: " << special << std::endl;
 		specialhouse = innerhouses->at(special);
 		specialhouse->makeRed();
 		village->addChild(villageTransform);
@@ -436,13 +438,15 @@ void FinalWindow::displayCallback()
 	//spotSphere->draw(Globals::drawData);
 
 	//Draw the OBJObjects!
-	//shad->bind();
+	if (toon)
+		shad->bind();
 	for (int i = 0; i < drawablesf->size(); i++) {
 		drawablesf->at(i)->draw(Globals::drawData);
 	}
 	changef.identity();
 	village->draw(changef);
-	//shad->unbind();
+	if (toon)
+		shad->unbind();
 	kittyTransform->draw(changef);
 	skyb->draw(Globals::drawData);
 
@@ -465,7 +469,10 @@ void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
 		village->bounding = !(village->bounding);
 		kittyTransform->bounding = !(kittyTransform->bounding);
 	}
-	
+	if (key == 't' || key == 'T') {
+		toon = !(toon);
+	}
+	/*
 	if (key == 'x') {
 		changef.makeTranslate(-1.0, 0.0, 0.0);
 
@@ -546,6 +553,7 @@ void FinalWindow::processNormalKeys(unsigned char key, int x, int y) {
 		changef.makeRotateY((-1.0) * 90 * 3.14159265 / 180.0);
 		drawablesf->at(lastf)->toWorld = drawablesf->at(lastf)->toWorld * changef;
 	}
+	*/
 }
 
 //TODO: Function Key callbacks!
@@ -560,7 +568,7 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 		Globals::camera.e = Globals::camera.e - (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
 		Globals::camera.update();
 	}
-	else if (key == GLUT_KEY_RIGHT) {
+	if (key == GLUT_KEY_RIGHT) {
 		changef.makeRotateY((-1.0)*4.0 * 3.14159265 / 180.0);
 		//kitty->toWorld = kitty->toWorld * changef;
 		kittyTransform->M = kittyTransform->M * changef;
@@ -570,7 +578,7 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 		Globals::camera.e = Globals::camera.e - (Vector3(0.0, 0.0, 0.0) - Globals::camera.d);
 		Globals::camera.update();
 	}
-	else if (key == GLUT_KEY_UP) {
+	if (key == GLUT_KEY_UP) {
 		changef.makeRotateZ(-6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(1.0, 0.0, 0.0);
@@ -582,7 +590,7 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 		Globals::camera.update();
 		
 	}
-	else if (key == GLUT_KEY_DOWN) {
+	if (key == GLUT_KEY_DOWN) {
 		changef.makeRotateZ(6.0 * 3.14159265 / 180.0);
 		kitty->toWorld = kitty->toWorld * changef;
 		changef.makeTranslate(-1.0, 0.0, 0.0);
@@ -596,12 +604,12 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 	}
 	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN) {
 		
-		minx = kittyGeode->center[0] - (float)(kittyGeode->rad*1.5 / 2.0);
-		maxx = kittyGeode->center[0] + (float)(kittyGeode->rad*1.5 / 2.0);
-		miny = kittyGeode->center[2] - (float)(kittyGeode->rad*1.5 / 2.0);
-		maxy = kittyGeode->center[2] + (float)(kittyGeode->rad*1.5 / 2.0);
+		minx = kittyGeode->center[0] - (float)(kittyGeode->rad);
+		maxx = kittyGeode->center[0] + (float)(kittyGeode->rad);
+		miny = kittyGeode->center[2] - (float)(kittyGeode->rad);
+		maxy = kittyGeode->center[2] + (float)(kittyGeode->rad);
 		colliding = false;
-
+		//std::cout << "minx, maxx, miny, maxy: " << minx << " " << maxx << " " << miny << " " << maxy << std::endl;
 		for (int i = 0; i < intervals->size(); i++) {
 			// if x overlap
 			if (((intervals->at(i)[0] < minx && minx < intervals->at(i)[1]) ||

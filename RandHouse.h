@@ -15,7 +15,7 @@ class RandHouse : public Geode
 {
 
 public:
-	Shader * shader;
+	//Shader * shader;
 	Material material;
 	int brand, rrand, drand;
 	bool makered;
