@@ -1,7 +1,7 @@
-﻿Build started 12/9/2015 8:20:16 PM.
+﻿Build started 12/9/2015 9:12:47 PM.
      1>Project "E:\glutfinal\Cube.vcxproj" on node 2 (Build target(s)).
      1>Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\HelloKitty.exe" /INCREMENTAL /NOLOGO /LIBPATH:"E:\glut-3.7.6-bin" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib GLee.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:LIBC.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\HelloKitty.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\HelloKitty.lib" /MACHINE:X86 /SAFESEH Release\Cube2.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\HelloKitty-seed.exe" /INCREMENTAL /NOLOGO /LIBPATH:"E:\glut-3.7.6-bin" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib GLee.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:LIBC.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\HelloKitty-seed.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\HelloKitty-seed.lib" /MACHINE:X86 /SAFESEH Release\Cube2.obj
          Release\FinalWindow.obj
          Release\Flag.obj
          Release\FrustumG.obj
@@ -36,9 +36,9 @@
          Release\MathTestBench.obj
          Release\OBJObject.obj
      1>LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
-         Cube.vcxproj -> E:\glutfinal\Release\HelloKitty.exe
+         Cube.vcxproj -> E:\glutfinal\Release\HelloKitty-seed.exe
      1>Done Building Project "E:\glutfinal\Cube.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.19
+Time Elapsed 00:00:05.07

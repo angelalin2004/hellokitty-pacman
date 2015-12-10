@@ -68,6 +68,8 @@ void FinalWindow::initialize(void)
 	PlaySound(TEXT("../Moon_Stage.wav"), NULL, SND_LOOP | SND_ASYNC);
 	Globals::camera.set(Vector3(0.0, 15.30, 24.14), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0));
 
+	srand(time(NULL));
+
 	//Setup the light
 	Vector4 lightPos(10.0, 10.0, 0.0, 1.0);
 	Globals::light.position = lightPos;
@@ -621,7 +623,7 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 				if (allhouses->at(i)->colliding == false) {
 					if (i-60 == special) {
 						points++;
-						std::cout << "You found the house! You now have " << points << "  point(s)!!" << std::endl;
+						std::cout << "You found the red house! You now have " << points << "  point(s)!!" << std::endl;
 						// choose new special house
 						specialhouse->makeNotRed();
 						special = rand() % 36;
@@ -630,7 +632,7 @@ void FinalWindow::processFunctionKeys(int key, int x, int y) {
 					}
 					else {
 						points--;
-						std::cout << "You hit a house >:( Now you only have " << points << "  points(s)!!" << std::endl;
+						std::cout << "You hit a non-red house >:( Now you only have " << points << "  points(s)!!" << std::endl;
 					}
 				}
 				allhouses->at(i)->colliding = true;
